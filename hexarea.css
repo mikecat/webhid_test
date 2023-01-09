@@ -1,0 +1,89 @@
+.hexarea-top {
+	display: table;
+	font-family: monospace;
+	white-space: nowrap;
+}
+
+.hexarea-top-row {
+	display: table-row;
+}
+
+.hexarea-top-cell {
+	display: table-cell;
+}
+
+.hexarea-byte-header {
+	display: table;
+}
+
+.hexarea-byte-header-cell {
+	text-align: center;
+	padding-bottom: 0.2em;
+}
+
+.hexarea-address {
+	display: table;
+}
+
+.hexarea-address-row {
+	display: table-row;
+}
+
+.hexarea-address-cell {
+	display: table-cell;
+	padding-right: 0.7em;
+}
+
+.hexarea-byte {
+	display: table;
+}
+
+.hexarea-byte-row {
+	display: table-row;
+}
+
+.hexarea-byte-cell {
+	display: table-cell;
+	width: 2ex;
+	height: 1em;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+}
+
+.hexarea-byte-cell:nth-child(4n):not(:last-child) {
+	padding-right: 0.35em;
+}
+
+.hexarea-byte-cell:nth-child(4n+1):not(:first-child) {
+	padding-left: 0.35em;
+}
+
+.hexarea-top:not(.hexarea-insert-mode) .hexarea-byte-current {
+	background-color: lime;
+}
+
+.hexarea-top.hexarea-insert-mode .hexarea-byte-current {
+	background: linear-gradient(transparent 70%, lime 70%);
+}
+
+.hexarea-char {
+	display: table;
+}
+
+.hexarea-char-row {
+	display: table-row;
+}
+
+.hexarea-char-cell {
+	display: table-cell;
+	width: 1ex;
+}
+
+.hexarea-char-left-margin {
+	display: table-cell;
+	width: 0.7em;
+}
+
+.hexarea-char-current {
+	background-color: lime;
+}
