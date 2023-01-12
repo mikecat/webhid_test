@@ -22,7 +22,7 @@
 	padding-bottom: 0.2em;
 }
 
-.hexarea-byte-header-cell div {
+.hexarea-byte-header-cell > div {
 	position: absolute;
 	width: 100%;
 	top: 0;
@@ -88,12 +88,28 @@
 }
 
 .hexarea-char-cell {
+	position: relative;
 	display: table-cell;
 	width: 1ex;
 }
 
+.hexarea-char-cell > div {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+
+.hexarea-char-cell:before {
+	content: ".";
+	visibility: hidden;
+}
+
 .hexarea-char-left-margin {
 	display: table-cell;
+}
+
+.hexarea-char-left-margin > div {
 	width: 0.7em;
 }
 

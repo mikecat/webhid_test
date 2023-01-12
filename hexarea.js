@@ -39,11 +39,15 @@ const HexArea = (function() {
 			internalNodes.byteTable.appendChild(byteRow);
 			internalNodes.byteRows.push(byteRow);
 			const charRow = createElementWithClass("div", "hexarea-char-row");
-			charRow.appendChild(createElementWithClass("div", "hexarea-char-left-margin"));
+			const charRowLeftMargin = createElementWithClass("div", "hexarea-char-left-margin");
+			charRowLeftMargin.appendChild(document.createElement("div"));
+			charRow.appendChild(charRowLeftMargin);
 			for (let i = 0; i < 16; i++) {
 				const charCell = createElementWithClass("div", "hexarea-char-cell");
+				const charCellData = document.createElement("div");
+				charCell.appendChild(charCellData);
 				charRow.appendChild(charCell);
-				internalNodes.charElements.push(charCell);
+				internalNodes.charElements.push(charCellData);
 			}
 			internalNodes.charTable.appendChild(charRow);
 			internalNodes.charRows.push(charRow);
