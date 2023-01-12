@@ -8,6 +8,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		const d = document.createElement("div");
 		d.setAttribute("class", "device-table-cell");
 		const h = new HexArea(true);
+		h.minAddressDigits = 2;
 		d.appendChild(h.node);
 		deviceTable.appendChild(d);
 		let testData = "";

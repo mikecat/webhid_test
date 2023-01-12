@@ -52,7 +52,7 @@ const HexArea = (function() {
 			internalNodes.charTable.appendChild(charRow);
 			internalNodes.charRows.push(charRow);
 		}
-		const addressSize = toHexWithDigits(16 * (numRows - 1)).length;
+		const addressSize = Math.max(toHexWithDigits(16 * (numRows - 1)).length, obj.minAddressDigitsInternal);
 		for (let i = 0; i < internalNodes.addressRows.length; i++) {
 			if (i < numRows) {
 				internalNodes.addressRows[i].style.display = "";
@@ -98,6 +98,7 @@ const HexArea = (function() {
 				"charElements": [],
 			}},
 		});
+		this.minAddressDigitsInternal = 0;
 		this.selectedIndexInternal = -1;
 		this.editingUpper = -1;
 		this.insertModeInternal = false;
@@ -193,6 +194,10 @@ const HexArea = (function() {
 		this.dataInternal = data.toString();
 		setDataElements(this);
 	};
+	const setMinAddressDigits = function(minDigits) {
+		this.minAddressDigitsInternal = minDigits;
+		setDataElements(this);
+	};
 	const setSelectedIndex = function(idx) {
 		if (this.selectedIndexInternal >= 0) {
 			this.internalNodes.byteElements[this.selectedIndexInternal].classList.remove("hexarea-byte-current");
@@ -222,6 +227,10 @@ const HexArea = (function() {
 		"data": {
 			"get": function() { return this.dataInternal; },
 			"set": setData
+		},
+		"minAddressDigits": {
+			"get": function() { return this.minAddressDigitsInternal; },
+			"set":setMinAddressDigits
 		},
 		"selectedIndex": {
 			"get": function() { return this.selectedIndexInternal; },
