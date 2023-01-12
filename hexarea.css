@@ -57,10 +57,24 @@
 
 .hexarea-byte-cell {
 	display: table-cell;
-	width: 2ex;
+	position: relative;
 	height: 1em;
 	padding-left: 0.2em;
 	padding-right: 0.2em;
+}
+
+.hexarea-byte-cell > div {
+	box-sizing: border-box;
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+	padding-left: 0.2em;
+}
+
+.hexarea-byte-cell:before {
+	content: "00";
+	visibility: hidden;
 }
 
 .hexarea-byte-cell:nth-child(4n):not(:last-child) {
@@ -68,6 +82,10 @@
 }
 
 .hexarea-byte-cell:nth-child(4n+1):not(:first-child) {
+	padding-left: 0.35em;
+}
+
+.hexarea-byte-cell:nth-child(4n+1):not(:first-child) > div {
 	padding-left: 0.35em;
 }
 
@@ -90,7 +108,6 @@
 .hexarea-char-cell {
 	position: relative;
 	display: table-cell;
-	width: 1ex;
 }
 
 .hexarea-char-cell > div {

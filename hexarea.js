@@ -26,6 +26,8 @@ const HexArea = (function() {
 			const byteRow = createElementWithClass("div", "hexarea-byte-row");
 			for (let i = 0; i < 16; i++) {
 				const byteCell = createElementWithClass("div", "hexarea-byte-cell");
+				const byteCellData = document.createElement("div");
+				byteCell.appendChild(byteCellData);
 				byteRow.appendChild(byteCell);
 				if (obj.editable) {
 					byteCell.addEventListener("click", (function(idx) {
@@ -34,7 +36,7 @@ const HexArea = (function() {
 						};
 					})(internalNodes.byteElements.length));
 				}
-				internalNodes.byteElements.push(byteCell);
+				internalNodes.byteElements.push(byteCellData);
 			}
 			internalNodes.byteTable.appendChild(byteRow);
 			internalNodes.byteRows.push(byteRow);
@@ -200,7 +202,7 @@ const HexArea = (function() {
 	};
 	const setSelectedIndex = function(idx) {
 		if (this.selectedIndexInternal >= 0) {
-			this.internalNodes.byteElements[this.selectedIndexInternal].classList.remove("hexarea-byte-current");
+			this.internalNodes.byteElements[this.selectedIndexInternal].parentNode.classList.remove("hexarea-byte-current");
 			this.internalNodes.charElements[this.selectedIndexInternal].classList.remove("hexarea-char-current");
 			if (this.editingUpper >= 0) {
 				this.internalNodes.byteElements[this.selectedIndexInternal].textContent =
@@ -210,7 +212,7 @@ const HexArea = (function() {
 		}
 		this.selectedIndexInternal = idx > this.data.length ? this.data.length : idx;
 		if (this.selectedIndexInternal >= 0) {
-			this.internalNodes.byteElements[this.selectedIndexInternal].classList.add("hexarea-byte-current");
+			this.internalNodes.byteElements[this.selectedIndexInternal].parentNode.classList.add("hexarea-byte-current");
 			this.internalNodes.charElements[this.selectedIndexInternal].classList.add("hexarea-char-current");
 		}
 	};
