@@ -1,12 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>WebHID Test</title>
-<link href="hexarea.css" rel="stylesheet">
-<script src="hexarea.js"></script>
-<script src="main.js"></script>
-</head>
-<body>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<title>WebHID Test</title>
+		<link href="hexarea.css" rel="stylesheet">
+		<script src="hexarea.js"></script>
+		<script src="main.js"></script>
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				display: grid;
+				grid-template-rows: auto 1fr;
+			}
+			.device-table-cell {
+				display: table-cell;
+				padding-left: 1em;
+			}
+			.device-table-cell:last-child {
+				padding-right: 1em;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="grid-row: 1; padding: 1em;">
+			<input type="button" id="add-device-button" value="add device">
+		</div>
+		<div style="grid-row: 2; overflow: auto;">
+			<div style="display: table; width: auto; height: 100%;">
+				<div id="device-table" style="display: table-row;">
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
