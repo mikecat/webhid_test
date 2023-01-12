@@ -17,8 +17,21 @@
 }
 
 .hexarea-byte-header-cell {
+	position: relative;
 	text-align: center;
 	padding-bottom: 0.2em;
+}
+
+.hexarea-byte-header-cell div {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+
+.hexarea-byte-header-cell:before {
+	content: "00";
+	visibility: hidden;
 }
 
 .hexarea-address {

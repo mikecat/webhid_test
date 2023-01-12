@@ -104,7 +104,9 @@ const HexArea = (function() {
 		const byteHeader = createElementWithClass("div", "hexarea-byte-header");
 		for (let i = 0; i < 16; i++) {
 			const byteHeaderCell = createElementWithClass("div", "hexarea-byte-header-cell hexarea-byte-cell");
-			byteHeaderCell.appendChild(document.createTextNode(i.toString(16).toUpperCase()));
+			const byteHeaderData = document.createElement("div");
+			byteHeaderData.appendChild(document.createTextNode(i.toString(16).toUpperCase()));
+			byteHeaderCell.appendChild(byteHeaderData);
 			byteHeader.appendChild(byteHeaderCell);
 		}
 		byteHeaderArea.appendChild(byteHeader);
