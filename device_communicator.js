@@ -19,5 +19,10 @@ const DeviceCommunicator = (function() {
 		this.sendDataInput.data = testData;
 	};
 
+	// この DeviceCommunicator に、紐づけたデバイスが切断されたことを通知する
+	DeviceCommunicator.prototype.deviceDisconnected = function() {
+		this.node.children[0].style.backgroundColor = "lightgray"; // temp
+	};
+
 	return DeviceCommunicator;
 })();

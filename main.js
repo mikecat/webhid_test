@@ -76,13 +76,54 @@ window.addEventListener("DOMContentLoaded", function() {
 			"english": "Using WebHID API is prohivited.",
 		}));
 	} else {
-		addDeviceButton.addEventListener("click", function() {
+		// WebHID API 関係の処理
+		const deviceCommunicators = [];
+		const deviceConnected = function(device) {
+			const comm = new DeviceCommunicator(device);
+			deviceCommunicators.push(comm);
 			const d = document.createElement("div");
 			d.setAttribute("class", "device-table-cell");
-			d.appendChild(new DeviceCommunicator(null).node);
+			d.appendChild(comm.node);
 			deviceTable.appendChild(d);
+		};
+
+		// 最初に接続されているデバイスを一覧に追加する
+		navigator.hid.getDevices().then(function(devices) {
+			for (let i = 0; i < devices.length; i++) {
+				deviceConnected(devices[i]);
+			}
+		});
+		// デバイスの追加イベントに対応する
+		navigator.hid.addEventListener("connect", function(event) {
+			deviceConnected(event.device);
+		});
+		// デバイス追加ボタン
+		addDeviceButton.addEventListener("click", function() {
+			navigator.hid.requestDevice({"filters": []}).then(function(devices) {
+				// デバイスが既にリストにあるものでなければ、追加する
+				for (let i = 0; i < devices.length; i++) {
+					let isNewDevice = true;
+					for (let j = 0; j < deviceCommunicators.length; j++) {
+						if (deviceCommunicators[j].device === devices[i]) {
+							isNewDevice = false;
+							break;
+						}
+					}
+					if (isNewDevice) deviceConnected(devices[i]);
+				}
+			});
 		});
 		addDeviceButton.disabled = false;
+
+		// デバイスの切断時、対応する DeviceCommunicator に通知する
+		navigator.hid.addEventListener("disconnect", function(event) {
+			for (let i = 0; i < deviceCommunicators.length; i++) {
+				console.log(deviceCommunicators[i].device);
+				if (deviceCommunicators[i].device === event.device) {
+					deviceCommunicators[i].deviceDisconnected();
+				}
+			}
+		});
 	}
 
 	// localStorage の操作で止まっても被害が抑えられるよう、最後に読み出しを行う
