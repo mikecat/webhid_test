@@ -11,6 +11,7 @@ body {
 .device-table-cell {
 	display: table-cell;
 	padding-left: 1em;
+	height: 100%;
 }
 .device-table-cell:last-child {
 	padding-right: 1em;

@@ -7,14 +7,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	addDeviceButton.addEventListener("click", function() {
 		const d = document.createElement("div");
 		d.setAttribute("class", "device-table-cell");
-		const h = new HexArea(true);
-		h.minAddressDigits = 2;
-		d.appendChild(h.node);
+		d.appendChild(new DeviceCommunicator(null).node);
 		deviceTable.appendChild(d);
-		let testData = "";
-		for (let i = 0; i < 32; i++) {
-			testData += String.fromCharCode((Math.random() * 256) >>> 0);
-		}
-		h.data = testData;
 	});
 });

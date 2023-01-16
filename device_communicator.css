@@ -1,0 +1,13 @@
+.device-top {
+	width: auto;
+	height: 100%;
+	box-sizing: border-box;
+	padding-bottom: 1em;
+}
+
+.device-top > div {
+	border: 1px solid black;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 0.5em;
+}
