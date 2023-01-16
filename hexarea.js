@@ -83,7 +83,7 @@ const HexArea = (function() {
 	};
 
 	const HexArea = function(editable, data) {
-		if (!(this instanceof HexArea)) return new HexArea(editable);
+		if (!(this instanceof HexArea)) return new HexArea(editable, data);
 		if ((typeof editable) === "undefined") editable = false;
 		Object.defineProperties(this, {
 			"editable": {"value": !!editable},
