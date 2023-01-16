@@ -11,9 +11,22 @@
 		<script src="device_communicator.js"></script>
 		<script src="main.js"></script>
 	</head>
-	<body>
+	<body class="language-select-japanese">
 		<div style="grid-row: 1; padding: 1em;">
-			<input type="button" id="add-device-button" value="add device">
+			<div id="upper-area">
+				<div style="grid-column: 1;">
+					<button type="button" id="add-device-button">
+						<span class="language-japanese">デバイスを追加</span>
+						<span class="language-english">add device</span>
+					</button>
+				</div>
+				<div style="grid-column: 2;">
+					<select id="language-select">
+						<option value="japanese" selected="selected">日本語</option>
+						<option value="english">English</option>
+					</select>
+				</div>
+			</div>
 		</div>
 		<div style="grid-row: 2; overflow: auto;">
 			<div style="display: table; width: auto; height: 100%;">

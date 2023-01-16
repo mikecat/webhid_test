@@ -4,15 +4,31 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
+
 body {
 	display: grid;
 	grid-template-rows: auto 1fr;
 }
+
+#upper-area {
+	display: grid;
+	grid-template-columns: 1fr auto;
+}
+
 .device-table-cell {
 	display: table-cell;
 	padding-left: 1em;
 	height: 100%;
 }
+
 .device-table-cell:last-child {
 	padding-right: 1em;
+}
+
+body:not(.language-select-japanese) .language-japanese {
+	display: none;
+}
+
+body:not(.language-select-english) .language-english {
+	display: none;
 }
