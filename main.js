@@ -2,6 +2,7 @@
 
 window.addEventListener("DOMContentLoaded", function() {
 	const addDeviceButton = document.getElementById("add-device-button");
+	const unsupportedMessageArea = document.getElementById("unsupported-message-area");
 	const languageSelect = document.getElementById("language-select");
 	const deviceTable = document.getElementById("device-table");
 
@@ -64,12 +65,25 @@ window.addEventListener("DOMContentLoaded", function() {
 	});
 	applyLanguageSelection(); // HTMLでの初期選択を反映させる
 
-	addDeviceButton.addEventListener("click", function() {
-		const d = document.createElement("div");
-		d.setAttribute("class", "device-table-cell");
-		d.appendChild(new DeviceCommunicator(null).node);
-		deviceTable.appendChild(d);
-	});
+	if(!("hid" in navigator)) {
+		unsupportedMessageArea.appendChild(createMultiLanguageNode({
+			"japanese": "この環境では WebHID API がサポートされていません。",
+			"english": "WebHID API is not supported in this environment.",
+		}));
+	} else if (("featurePolicy" in document) && !document.featurePolicy.allowsFeature("hid")) {
+		unsupportedMessageArea.appendChild(createMultiLanguageNode({
+			"japanese": "WebHID API の使用が許可されていません。",
+			"english": "Using WebHID API is prohivited.",
+		}));
+	} else {
+		addDeviceButton.addEventListener("click", function() {
+			const d = document.createElement("div");
+			d.setAttribute("class", "device-table-cell");
+			d.appendChild(new DeviceCommunicator(null).node);
+			deviceTable.appendChild(d);
+		});
+		addDeviceButton.disabled = false;
+	}
 
 	// localStorage の操作で止まっても被害が抑えられるよう、最後に読み出しを行う
 	let languageConfig = readLocalStorage(LANGUAGE_KEY);
