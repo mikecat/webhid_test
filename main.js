@@ -75,7 +75,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	let languageConfig = readLocalStorage(LANGUAGE_KEY);
 	let languageSaveRequest = false;
 	if (languageConfig === null) {
-		if (navigator.language.substring(0, 2).toLowerCase() === "ja") {
+		if ("language" in navigator && navigator.language.substring(0, 2).toLowerCase() === "ja") {
 			languageConfig = "japanase";
 		} else {
 			languageConfig = "english";
