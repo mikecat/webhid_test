@@ -118,7 +118,6 @@ window.addEventListener("DOMContentLoaded", function() {
 		// デバイスの切断時、対応する DeviceCommunicator に通知する
 		navigator.hid.addEventListener("disconnect", function(event) {
 			for (let i = 0; i < deviceCommunicators.length; i++) {
-				console.log(deviceCommunicators[i].device);
 				if (deviceCommunicators[i].device === event.device) {
 					deviceCommunicators[i].deviceDisconnected();
 				}
