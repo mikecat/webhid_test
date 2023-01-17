@@ -26,13 +26,37 @@
 	height: 100%;
 }
 
-.device-info, .device-last-rx-info, .device-footer {
+.device-info, .device-footer {
 	display: grid;
-	grid-template-columns: 1fr auto;
+	grid-template-columns: auto 1fr auto;
 }
 
 .device-info button:not(:last-child) {
 	margin-right: 0.5em;
+}
+
+.device-indicator {
+	text-align: center;
+}
+
+.device-status-element:not(.device-status-opened) .device-indicator-opened {
+	display: none;
+}
+
+.device-status-element:not(.device-status-closed) .device-indicator-closed {
+	display: none;
+}
+
+.device-status-element:not(.device-status-forgotten) .device-indicator-forgotten {
+	display: none;
+}
+
+.device-status-element:not(.device-status-connected) .device-indicator-connected {
+	display: none;
+}
+
+.device-status-element:not(.device-status-disconnected) .device-indicator-disconnected {
+	display: none;
 }
 
 .device-tx-report-id, .device-last-rx-info, .device-footer {
@@ -49,4 +73,9 @@
 
 .device-tx-button-area button:not(:first-child) {
 	margin-left: 0.5em;
+}
+
+.device-last-rx-info {
+	display: grid;
+	grid-template-columns: 1fr auto;
 }

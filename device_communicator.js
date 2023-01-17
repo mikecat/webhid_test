@@ -9,7 +9,7 @@ const DeviceCommunicator = (function() {
 		});
 		const innerDiv = document.createElement("div");
 		(function(div, obj) {
-			const innerGrid = createElementWithClass("div", "device-area-divider");
+			const innerGrid = createElementWithClass("div", "device-area-divider device-status-element");
 			div.appendChild(innerGrid);
 			const innerGridTop = document.createElement("div");
 			innerGridTop.setAttribute("style", "grid-row: 1;");
@@ -29,8 +29,30 @@ const DeviceCommunicator = (function() {
 				toHexWithDigits(device.vendorId, 4) + ":" + toHexWithDigits(device.productId, 4)
 			));
 			deviceInfo.appendChild(deviceIdArea);
+			const deviceOpenStatus = document.createElement("div");
+			deviceOpenStatus.setAttribute("style", "grid-column: 2;");
+			deviceOpenStatus.setAttribute("class", "device-indicator");
+			deviceInfo.appendChild(deviceOpenStatus);
+			const deviceOpenIndicator = createMultiLanguageNode({
+				"japanese": "通信可 (opened)",
+				"english": "opened",
+			});
+			deviceOpenIndicator.setAttribute("class", "device-indicator-opened");
+			deviceOpenStatus.appendChild(deviceOpenIndicator);
+			const deviceClosedIndicator = createMultiLanguageNode({
+				"japanese": "通信不可 (closed)",
+				"english": "closed",
+			});
+			deviceClosedIndicator.setAttribute("class", "device-indicator-closed");
+			deviceOpenStatus.appendChild(deviceClosedIndicator);
+			const deviceForgottenIndicator = createMultiLanguageNode({
+				"japanese": "設定解除 (forgotten)",
+				"english": "forgotten",
+			});
+			deviceForgottenIndicator.setAttribute("class", "device-indicator-forgotten");
+			deviceOpenStatus.appendChild(deviceForgottenIndicator);
 			const deviceConnectionControlArea = document.createElement("div");
-			deviceConnectionControlArea.setAttribute("style", "grid-column: 2;");
+			deviceConnectionControlArea.setAttribute("style", "grid-column: 3;");
 			const openButton = document.createElement("button");
 			openButton.setAttribute("type", "button");
 			openButton.appendChild(createMultiLanguageNode({
@@ -149,8 +171,24 @@ const DeviceCommunicator = (function() {
 				"english": "save log",
 			}));
 			innerGridBottomLeft.appendChild(logSaveButton);
+			const deviceConnectionStatus = document.createElement("div");
+			deviceConnectionStatus.setAttribute("style", "grid-column: 2;");
+			deviceConnectionStatus.setAttribute("class", "device-indicator");
+			innerGridBottom.appendChild(deviceConnectionStatus);
+			const deviceConnectedIndicator = createMultiLanguageNode({
+				"japanese": "接続中",
+				"english": "connected",
+			});
+			deviceConnectedIndicator.setAttribute("class", "device-indicator-connected");
+			deviceConnectionStatus.appendChild(deviceConnectedIndicator);
+			const deviceDisconnectedIndicator = createMultiLanguageNode({
+				"japanese": "切断済",
+				"english": "disconnected",
+			});
+			deviceDisconnectedIndicator.setAttribute("class", "device-indicator-disconnected");
+			deviceConnectionStatus.appendChild(deviceDisconnectedIndicator);
 			const innerGridBottomRight = document.createElement("div");
-			innerGridBottomRight.setAttribute("style", "grid-column: 2;");
+			innerGridBottomRight.setAttribute("style", "grid-column: 3;");
 			innerGridBottom.appendChild(innerGridBottomRight);
 			const removeButton = document.createElement("button");
 			removeButton.setAttribute("type", "button");
@@ -159,13 +197,25 @@ const DeviceCommunicator = (function() {
 				"english": "remove from list",
 			}));
 			innerGridBottomRight.appendChild(removeButton);
+
+			innerGrid.classList.add("device-status-connected");
+			if(device.opened) {
+				innerGrid.classList.add("device-status-opened");
+			} else {
+				innerGrid.classList.add("device-status-closed");
+			}
+			Object.defineProperties(obj, {
+				"statusElement": {"value": innerGrid},
+			});
+
 		})(innerDiv, this);
 		this.node.appendChild(innerDiv);
 	};
 
 	// この DeviceCommunicator に、紐づけたデバイスが切断されたことを通知する
 	DeviceCommunicator.prototype.deviceDisconnected = function() {
-		this.node.children[0].style.backgroundColor = "lightgray"; // temp
+		this.statusElement.classList.remove("device-status-connected");
+		this.statusElement.classList.add("device-status-disconnected");
 	};
 
 	return DeviceCommunicator;
