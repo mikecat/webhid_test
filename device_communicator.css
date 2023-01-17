@@ -11,3 +11,42 @@
 	box-sizing: border-box;
 	padding: 0.5em;
 }
+
+.device-top h2 {
+	margin: 0;
+}
+
+.device-top h3 {
+	margin: 0.5em 0;
+}
+
+.device-area-divider {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	height: 100%;
+}
+
+.device-info, .device-last-rx-info, .device-footer {
+	display: grid;
+	grid-template-columns: 1fr auto;
+}
+
+.device-info button:not(:last-child) {
+	margin-right: 0.5em;
+}
+
+.device-tx-report-id, .device-last-rx-info, .device-footer {
+	margin-top: 0.5em;
+}
+
+.device-tx-button-area {
+	text-align: right;
+}
+
+.device-tx-button-area button {
+	margin-top: 0.5em;
+}
+
+.device-tx-button-area button:not(:first-child) {
+	margin-left: 0.5em;
+}
