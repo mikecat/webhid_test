@@ -16,7 +16,7 @@ const DeviceCommunicator = (function() {
 			innerGrid.appendChild(innerGridTop);
 			const deviceName = document.createElement("h2");
 			deviceName.appendChild(document.createTextNode(device.productName));
-			if (device.productName === ""){
+			if (device.productName === "") {
 				deviceName.innerHTML = "&nbsp;";
 			}
 			innerGridTop.appendChild(deviceName);
