@@ -211,6 +211,16 @@ const DeviceCommunicator = (function() {
 				addLog({"time": new Date(), "kind": "error", "target": target, "message": message});
 			};
 
+			let statusIsOpened = false;
+			const updateSendButtonEnableStatus = function() {
+				let enable = statusIsOpened;
+				const reportId = parseInt(reportIdInput.value);
+				if (isNaN(reportId) || reportId < 0 || 0xff <reportId) enable = false;
+				sendOutputButton.disabled = !enable;
+				sendFeatureButton.disabled = !enable;
+				receiveFeatureButton.disabled = !enable;
+			};
+			reportIdInput.addEventListener("input", updateSendButtonEnableStatus);
 			const setDeviceOpenStatus = function(status, time) {
 				if ((typeof time) === "undefined") time = new Date();
 				innerGrid.classList.remove("device-status-opened");
@@ -219,6 +229,8 @@ const DeviceCommunicator = (function() {
 				innerGrid.classList.add("device-status-" + status);
 				openButton.disabled = status !== "closed";
 				closeButton.disabled = status === "forgotten";
+				statusIsOpened = status === "opened";
+				updateSendButtonEnableStatus();
 				sendOutputButton.disabled = status !== "opened";
 				sendFeatureButton.disabled = status !== "opened";
 				receiveFeatureButton.disabled = status !== "opened";
