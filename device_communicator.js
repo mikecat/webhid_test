@@ -269,6 +269,42 @@ const DeviceCommunicator = (function() {
 				});
 			});
 
+			sendOutputButton.addEventListener("click", function() {
+				const data = sendDataInput.dataUint8;
+				const reportId = parseInt(reportIdInput.value);
+				device.sendReport(reportId, data).then(function() {
+					addLog({"time": new Date(), "kind": "send", "data": data, "reportId": reportId});
+				}).catch(function(error) {
+					addErrorLog("send", error.name + ": " + error.message);
+				});
+			});
+			sendFeatureButton.addEventListener("click", function() {
+				const data = sendDataInput.dataUint8;
+				const reportId = parseInt(reportIdInput.value);
+				device.sendFeatureReport(reportId, data).then(function() {
+					addLog({"time": new Date(), "kind": "sendFeature", "data": data, "reportId": reportId});
+				}).catch(function(error) {
+					addErrorLog("sendFeature", error.name + ": " + error.message);
+				});
+			});
+			receiveFeatureButton.addEventListener("click", function() {
+				const reportId = parseInt(reportIdInput.value);
+				device.receiveFeatureReport(reportId).then(function(dataRaw) {
+					const data = new Uint8Array(dataRaw.buffer, dataRaw.byteOffset, dataRaw.byteLength);
+					receivedDataArea.dataUint8 = data;
+					lastReceivedReportIdArea.textContent = "0x" + toHexWithDigits(reportId, 2) + " (feature)";
+					addLog({"time": new Date(), "kind": "receiveFeature", "data": data, "reportId": reportId});
+				}).catch(function(error) {
+					addErrorLog("receiveFeature", error.name + ": " + error.message);
+				});
+			});
+			device.addEventListener("inputreport", function(event) {
+				const data = new Uint8Array(event.data.buffer, event.data.byteOffset, event.data.byteLength);
+				receivedDataArea.dataUint8 = data;
+				lastReceivedReportIdArea.textContent = "0x" + toHexWithDigits(event.reportId, 2);
+				addLog({"time": new Date(), "kind": "receive", "data": data, "reportId": event.reportId});
+			});
+
 			Object.defineProperties(obj, {
 				"statusElement": {"value": innerGrid},
 				"addLog": {"value": addLog},
