@@ -59,6 +59,14 @@
 	display: none;
 }
 
+.device-status-element.device-status-forgotten .device-indicator-connected {
+	display: none;
+}
+
+.device-status-element.device-status-forgotten .device-indicator-disconnected {
+	display: none;
+}
+
 .device-tx-report-id, .device-last-rx-info, .device-footer {
 	margin-top: 0.5em;
 }

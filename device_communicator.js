@@ -207,16 +207,56 @@ const DeviceCommunicator = (function() {
 				logArea.appendChild(document.createTextNode(JSON.stringify(logEntry)));
 				logArea.appendChild(document.createElement("br"));
 			}
+			const addErrorLog = function(target, message) {
+				addLog({"time": new Date(), "kind": "error", "target": target, "message": message});
+			};
+
+			const setDeviceOpenStatus = function(status, time) {
+				if ((typeof time) === "undefined") time = new Date();
+				innerGrid.classList.remove("device-status-opened");
+				innerGrid.classList.remove("device-status-closed");
+				innerGrid.classList.remove("device-status-forgotten");
+				innerGrid.classList.add("device-status-" + status);
+				openButton.disabled = status !== "closed";
+				closeButton.disabled = status === "forgotten";
+				sendOutputButton.disabled = status !== "opened";
+				sendFeatureButton.disabled = status !== "opened";
+				receiveFeatureButton.disabled = status !== "opened";
+				if (time !== null) {
+					addLog({"time": time, "kind": "status", "value": status});
+				}
+			};
 
 			const currentTime = new Date();
 			innerGrid.classList.add("device-status-connected");
 			addLog({"time": currentTime, "kind": "status", "value": "connected"});
 			if(device.opened) {
-				innerGrid.classList.add("device-status-opened");
-				addLog({"time": currentTime, "kind": "status", "value": "opened"});
+				setDeviceOpenStatus("opened", currentTime);
 			} else {
-				innerGrid.classList.add("device-status-closed");
+				setDeviceOpenStatus("closed", null);
 			}
+			openButton.addEventListener("click", function() {
+				device.open().then(function() {
+					setDeviceOpenStatus("opened");
+				}).catch(function(error) {
+					addErrorLog("open", error.name + ": " + error.message);
+				});
+			});
+			closeButton.addEventListener("click", function() {
+				device.close().then(function() {
+					setDeviceOpenStatus("closed");
+				}).catch(function(error) {
+					addErrorLog("close", error.name + ": " + error.message);
+				});
+			});
+			forgetButton.addEventListener("click", function() {
+				device.forget().then(function() {
+					setDeviceOpenStatus("forgotten");
+				}).catch(function(error) {
+					addErrorLog("forget", error.name + ": " + error.message);
+				});
+			});
+
 			Object.defineProperties(obj, {
 				"statusElement": {"value": innerGrid},
 				"addLog": {"value": addLog},
