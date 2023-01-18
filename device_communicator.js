@@ -9,6 +9,7 @@ const DeviceCommunicator = (function() {
 		});
 		const innerDiv = document.createElement("div");
 		(function(div, obj) {
+			// ----- UIの生成 -----
 			const innerGrid = createElementWithClass("div", "device-area-divider device-status-element");
 			div.appendChild(innerGrid);
 			const innerGridTop = document.createElement("div");
@@ -198,14 +199,27 @@ const DeviceCommunicator = (function() {
 			}));
 			innerGridBottomRight.appendChild(removeButton);
 
+			// ----- 動作の実装 -----
+			const logData = [];
+			const addLog = function(logEntry) {
+				logData.push(logEntry);
+				// TODO: ちゃんと表示用に変換する
+				logArea.appendChild(document.createTextNode(JSON.stringify(logEntry)));
+				logArea.appendChild(document.createElement("br"));
+			}
+
+			const currentTime = new Date();
 			innerGrid.classList.add("device-status-connected");
+			addLog({"time": currentTime, "kind": "status", "value": "connected"});
 			if(device.opened) {
 				innerGrid.classList.add("device-status-opened");
+				addLog({"time": currentTime, "kind": "status", "value": "opened"});
 			} else {
 				innerGrid.classList.add("device-status-closed");
 			}
 			Object.defineProperties(obj, {
 				"statusElement": {"value": innerGrid},
+				"addLog": {"value": addLog},
 			});
 
 		})(innerDiv, this);
@@ -216,6 +230,7 @@ const DeviceCommunicator = (function() {
 	DeviceCommunicator.prototype.deviceDisconnected = function() {
 		this.statusElement.classList.remove("device-status-connected");
 		this.statusElement.classList.add("device-status-disconnected");
+		this.addLog({"time": currentTime, "kind": "status", "value": "disconnected"});
 	};
 
 	return DeviceCommunicator;
