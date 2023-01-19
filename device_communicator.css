@@ -87,3 +87,11 @@
 	display: grid;
 	grid-template-columns: 1fr auto;
 }
+
+.device-log-entry > div:first-child > span:not(:first-child) {
+	margin-left: 0.5em;
+}
+
+.device-data-summary {
+	font-family: monospace;
+}

@@ -1,6 +1,86 @@
 "use strict";
 
 const DeviceCommunicator = (function() {
+	// ログ用のテキスト
+	const statusNames = {
+		"connected": {
+			"japanese": "接続",
+			"english": "connected",
+		},
+		"disconnected": {
+			"japanese": "切断",
+			"english": "disconnected",
+		},
+		"opened": {
+			"japanese": "通信開始",
+			"english": "opened",
+		},
+		"closed": {
+			"japanese": "通信終了",
+			"english": "closed",
+		},
+		"forgotten": {
+			"japanese": "設定解除",
+			"english": "forgotten",
+		},
+	};
+	const errorPrefix = {
+		"japanese": "",
+		"english": "Failed to ",
+	};
+	const errorSuffix = {
+		"japanese": "に失敗",
+		"english": ".",
+	};
+	const actionNames = {
+		"open": {
+			"japanese": "通信の開始",
+			"english": "open device",
+		},
+		"close": {
+			"japanese": "通信の終了",
+			"english": "close device",
+		},
+		"forget": {
+			"japanese": "設定の解除",
+			"english": "forget device",
+		},
+		"send": {
+			"japanese": "output レポートの送信",
+			"english": "send output report",
+		},
+		"sendFeature": {
+			"japanese": "feature レポートの送信",
+			"english": "send feature report",
+		},
+		"receiveFeature": {
+			"japanese": "feature レポートの受信",
+			"english": "receive feature report",
+		},
+	};
+	const communicationNames = {
+		"send": {
+			"japanese": "送信",
+			"english": "output",
+		},
+		"receive": {
+			"japanese": "受信",
+			"english": "input",
+		},
+		"sendFeature": {
+			"japanese": "feature レポートの送信",
+			"english": "send feature report",
+		},
+		"receiveFeature": {
+			"japanese": "feature レポートの受信",
+			"english": "receive feature report",
+		},
+	};
+	const reportIdName = {
+		"japanese": "レポートID",
+		"english": "Report ID",
+	};
+
 	const DeviceCommunicator = function(device) {
 		if (!(this instanceof DeviceCommunicator)) return new DeviceCommunicator(device);
 		Object.defineProperties(this, {
@@ -203,9 +283,72 @@ const DeviceCommunicator = (function() {
 			const logData = [];
 			const addLog = function(logEntry) {
 				logData.push(logEntry);
-				// TODO: ちゃんと表示用に変換する
-				logArea.appendChild(document.createTextNode(JSON.stringify(logEntry)));
-				logArea.appendChild(document.createElement("br"));
+				const logElement = createElementWithClass("div", "device-log-entry");
+				const log1 = document.createElement("div");
+				logElement.appendChild(log1);
+				const timeElement = document.createElement("span");
+				timeElement.appendChild(document.createTextNode(logEntry.time.toLocaleTimeString()));
+				log1.appendChild(timeElement);
+				if (logEntry.kind === "status") {
+					if (logEntry.value in statusNames) {
+						log1.appendChild(createMultiLanguageNode(statusNames[logEntry.value]));
+					} else {
+						const s = document.createElement("span");
+						s.appendChild(document.createTextNode(logEntry.value));
+						log1.appendChild(s);
+					}
+				} else if (logEntry.kind === "error") {
+					const errorText = document.createElement("span");
+					errorText.appendChild(createMultiLanguageNode(errorPrefix));
+					if (logEntry.target in actionNames) {
+						errorText.appendChild(createMultiLanguageNode(actionNames[logEntry.target]));
+					} else {
+						errorText.appendChild(document.createTextNode(logEntry.target));
+					}
+					errorText.appendChild(createMultiLanguageNode(errorSuffix));
+					log1.appendChild(errorText);
+					const log2 = document.createElement("div");
+					log2.appendChild(document.createTextNode(logEntry.message));
+					logElement.appendChild(log2);
+				} else if (logEntry.kind === "communication") {
+					if (logEntry.action in communicationNames) {
+						log1.appendChild(createMultiLanguageNode(communicationNames[logEntry.action]));
+					} else {
+						const s = document.createElement("span");
+						s.appendChild(document.createTextNode(logEntry.action));
+						log1.appendChild(s);
+					}
+					const reportIdElement = document.createElement("span");
+					reportIdElement.appendChild(document.createTextNode("("));
+					reportIdElement.appendChild(createMultiLanguageNode(reportIdName));
+					reportIdElement.appendChild(document.createTextNode(": 0x" + toHexWithDigits(logEntry.reportId, 2) + ")"));
+					log1.appendChild(reportIdElement);
+					const log2 = document.createElement("div");
+					const dataDetailTop = document.createElement("details");
+					const dataSummary = document.createElement("summary");
+					const dataDetail = document.createElement("div");
+					const dataArea = new HexArea(false);
+					dataArea.minAddressDigits = 2;
+					dataArea.dataUint8 = logEntry.data;
+					logElement.appendChild(log2);
+					log2.appendChild(dataDetailTop);
+					dataDetailTop.appendChild(dataSummary);
+					dataDetailTop.appendChild(dataDetail);
+					dataDetail.appendChild(dataArea.node);
+					let dataString = "";
+					for (let i = 0; i < logEntry.data.length && i < 16; i++) {
+						if (i > 0) dataString += " ";
+						dataString += toHexWithDigits(logEntry.data[i], 2);
+					}
+					if (logEntry.data.length > 16) dataString += " …";
+					dataSummary.appendChild(document.createTextNode(dataString));
+					dataSummary.setAttribute("class", "device-data-summary");
+				} else {
+					const s = document.createElement("span");
+					s.appendChild(document.createTextNode(logEntry.kind));
+					log1.appendChild(s);
+				}
+				logArea.insertBefore(logElement, logArea.firstChild);
 			}
 			const addErrorLog = function(target, message) {
 				addLog({"time": new Date(), "kind": "error", "target": target, "message": message});
