@@ -318,7 +318,7 @@ const DeviceCommunicator = (function() {
 	DeviceCommunicator.prototype.deviceDisconnected = function() {
 		this.statusElement.classList.remove("device-status-connected");
 		this.statusElement.classList.add("device-status-disconnected");
-		this.addLog({"time": currentTime, "kind": "status", "value": "disconnected"});
+		this.addLog({"time": new Date(), "kind": "status", "value": "disconnected"});
 	};
 
 	return DeviceCommunicator;
