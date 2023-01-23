@@ -81,6 +81,19 @@ const DeviceCommunicator = (function() {
 		"english": "Report ID",
 	};
 
+	const uint8ToHexString = function(array) {
+		let result = "";
+		for (let i = 0; i < array.length; i++) {
+			result += toHexWithDigits(array[i], 2);
+		}
+		return result;
+	};
+	const toDecimalWithDigits = function(value, digits) {
+		let result = value.toString(10);
+		while (result.length < digits) result = "0" + result;
+		return result;
+	};
+
 	const DeviceCommunicator = function(device) {
 		if (!(this instanceof DeviceCommunicator)) return new DeviceCommunicator(device);
 		Object.defineProperties(this, {
@@ -353,6 +366,44 @@ const DeviceCommunicator = (function() {
 			const addErrorLog = function(target, message) {
 				addLog({"time": new Date(), "kind": "error", "target": target, "message": message});
 			};
+			logSaveButton.addEventListener("click", (function() {
+				let prevObjectURL = null;
+				return function() {
+					const logText = JSON.stringify({
+						"device": {
+							"productName": device.productName,
+							"vendorId": device.vendorId,
+							"productId": device.productId,
+						},
+						"logData": logData,
+					}, function(key, value) {
+						if (value instanceof ArrayBuffer) {
+							return uint8ToHexString(new Uint8Array(value));
+						} else if (ArrayBuffer.isView(value)) {
+							return uint8ToHexString(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
+						} else {
+							return value;
+						}
+					});
+					const blob = new Blob([logText], {"type": "application/json"});
+					const blobURL = URL.createObjectURL(blob);
+					if (prevObjectURL !== null) URL.revokeObjectURL(prevObjectURL);
+					prevObjectURL = blobURL;
+					const aElement = document.createElement("a");
+					const currentDate = new Date();
+					aElement.setAttribute("href", blobURL);
+					aElement.setAttribute("download", "hidlog-" +
+						toHexWithDigits(device.vendorId, 4).toLowerCase() + "-" +
+						toHexWithDigits(device.productId, 4).toLowerCase() + "-" +
+						toDecimalWithDigits(currentDate.getFullYear(), 4) +
+						toDecimalWithDigits(currentDate.getMonth() + 1, 2) +
+						toDecimalWithDigits(currentDate.getDate(), 2) +
+						toDecimalWithDigits(currentDate.getHours(), 2) +
+						toDecimalWithDigits(currentDate.getMinutes(), 2) +
+						toDecimalWithDigits(currentDate.getSeconds(), 2) +".json");
+					aElement.click();
+				};
+			})());
 
 			let statusIsOpened = false;
 			const updateSendButtonEnableStatus = function() {
