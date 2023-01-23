@@ -499,6 +499,10 @@ const DeviceCommunicator = (function() {
 				addLog({"time": new Date(), "kind": "communication", "action": "receive", "data": data, "reportId": event.reportId});
 			});
 
+			removeButton.addEventListener("click", function() {
+				obj.node.style.display = "none";
+			});
+
 			Object.defineProperties(obj, {
 				"statusElement": {"value": innerGrid},
 				"addLog": {"value": addLog},
