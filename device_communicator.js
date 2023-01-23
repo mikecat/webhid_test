@@ -286,6 +286,7 @@ const DeviceCommunicator = (function() {
 			innerGridBottom.appendChild(innerGridBottomRight);
 			const removeButton = document.createElement("button");
 			removeButton.setAttribute("type", "button");
+			removeButton.disabled = true;
 			removeButton.appendChild(createMultiLanguageNode({
 				"japanese": "表示を消す",
 				"english": "remove from list",
@@ -458,6 +459,7 @@ const DeviceCommunicator = (function() {
 			forgetButton.addEventListener("click", function() {
 				device.forget().then(function() {
 					setDeviceOpenStatus("forgotten");
+					removeButton.disabled = false;
 				}).catch(function(error) {
 					addErrorLog("forget", error.name + ": " + error.message);
 				});
@@ -505,6 +507,7 @@ const DeviceCommunicator = (function() {
 
 			Object.defineProperties(obj, {
 				"statusElement": {"value": innerGrid},
+				"removeButtonElement": {"value": removeButton},
 				"addLog": {"value": addLog},
 			});
 
@@ -517,6 +520,7 @@ const DeviceCommunicator = (function() {
 		this.statusElement.classList.remove("device-status-connected");
 		this.statusElement.classList.add("device-status-disconnected");
 		this.addLog({"time": new Date(), "kind": "status", "value": "disconnected"});
+		this.removeButtonElement.disabled = false;
 	};
 
 	return DeviceCommunicator;
